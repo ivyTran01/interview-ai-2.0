@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "clean": "rimraf .next",
+    "clean-build": "npm run clean && npm run build",
+    "deploy": "npm run clean-build && pm2 restart your-app"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.14",
