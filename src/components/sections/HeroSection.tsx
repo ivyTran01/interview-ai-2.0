@@ -5,7 +5,6 @@ import Navbar from '@/components/layout/Navbar'
 export default function HeroSection() {
     return (
         <>
-            <Navbar />
             <section className="min-h-max bg-white dark:bg-gray-950">
                 <div className="absolute top-0 inset-x-0 h-64 flex items-start">
                     <div className="h-24 w-2/3 bg-gradient-to-br from-purple-500 opacity-20 blur-2xl dark:from-purple-700 dark:invisible dark:opacity-40">
@@ -24,11 +23,11 @@ export default function HeroSection() {
                         asperiores necessitatibus deleniti, sint quo vel corporis dignissimos
                     </p>
                     <div className="flex justify-center items-center flex-wrap mx-auto gap-4">
-                        <Link href="#" className="flex items-center h-12 px-6 rounded-full bg-purple-600 text-white border border-purple-600">
-                            Hire us Now
+                        <Link href="/dashboard" className="flex items-center h-12 px-6 rounded-full bg-purple-600 text-white border border-purple-600">
+                            View my dashboard
                         </Link>
                         <Link href="#" className="flex items-center h-12 px-6 rounded-full bg-gray-100 dark:bg-gray-900 text-purple-700 dark:text-gray-300 border border-gray-200 dark:border-gray-800">
-                            Learn more
+                            Check my resume
                         </Link>
                     </div>
                 </div>
