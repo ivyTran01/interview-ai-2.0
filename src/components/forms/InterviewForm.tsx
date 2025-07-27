@@ -79,7 +79,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
     };
 
     return (
-        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 max-w-2xl mx-auto py-10">
+        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 w-full py-6">
             <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
                 <Input id="company" {...form.register("company")} placeholder="e.g., Google" />

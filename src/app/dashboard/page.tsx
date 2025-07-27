@@ -6,6 +6,7 @@ import {InterviewForm} from "@/components/forms/InterviewForm";
 import {toast} from "sonner";
 import {useState} from "react";
 import {useAuth} from "@/context/AuthContext";
+import {DialogTitle} from "@/components/ui/dialog";
 
 export default function DashboardPage() {
     const { user } = useAuth();
@@ -30,7 +31,8 @@ export default function DashboardPage() {
                         <Button>Add Interview</Button>
                     </SheetTrigger>
 
-                    <SheetContent side="right" className="w-full sm:w-[500px]">
+                    <SheetContent side="right" className="w-full max-w-[90vw] lg:max-w-[60vw] p-22">
+                        <DialogTitle title="Add Interview" />
                         <h2 className="text-lg font-semibold mb-4">Add New Interview</h2>
                         <InterviewForm
                             onSubmit={handleInterviewSubmit}
