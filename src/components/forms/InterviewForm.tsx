@@ -37,7 +37,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            salary: 50,
+            salary: 90000,
             rating: 3,
             interviewDate: new Date(),
         },
