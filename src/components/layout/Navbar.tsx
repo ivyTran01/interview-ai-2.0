@@ -1,6 +1,9 @@
 "use client"
 import {useState} from "react";
 import Link from "next/link";
+import {signInWithGoogle} from "@/lib/firebase/auth";
+import {Button} from "@/components/ui/button";
+
 
 const Navbar = () => {
     const [openNavbar, setOpenNavbar] = useState(false)
@@ -38,9 +41,18 @@ const Navbar = () => {
                         </li>
                     </ul>
                     <div className="flex flex-col sm:flex-row sm:items-center gap-4  lg:min-w-max mt-10 lg:mt-0">
-                        <Link href="#" className="flex items-center justify-center w-full sm:w-auto h-12 px-6 rounded-full bg-gray-100 dark:bg-gray-900 text-purple-600 dark:text-gray-300 border border-gray-200 dark:border-gray-800">
-                            Get It touch
-                        </Link>
+                        <Button
+                            onClick={async () => {
+                                try {
+                                    const user = await signInWithGoogle();
+                                    alert(`Welcome, ${user.displayName}`);
+                                } catch (err) {
+                                    alert("Login failed");
+                                }
+                            }}
+                        >
+                            Sign in
+                        </Button>
                     </div>
                 </div>
                 <div className="flex items-center lg:hidden">
