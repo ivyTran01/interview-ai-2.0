@@ -12,7 +12,7 @@
     "deploy": "npm run clean-build && pm2 restart your-app"
   },
   "dependencies": {
-    "@hookform/resolvers": "^5.1.1",
+    "@hookform/resolvers": "^5.2.1",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-popover": "^1.1.14",
@@ -28,12 +28,12 @@
     "lucide-react": "^0.525.0",
     "next": "15.4.2",
     "react": "19.1.0",
-    "react-day-picker": "^9.8.0",
+    "react-day-picker": "^9.8.1",
     "react-dom": "19.1.0",
-    "react-hook-form": "^7.61.0",
+    "react-hook-form": "^7.61.1",
     "sonner": "^2.0.6",
     "tailwind-merge": "^3.3.1",
-    "zod": "^4.0.8"
+    "zod": "^4.0.14"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

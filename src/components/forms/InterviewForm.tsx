@@ -6,12 +6,20 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import {Rating, RatingButton} from "@/components/ui/rating-stars";
+import { Rating, RatingButton } from "@/components/ui/rating-stars";
 import { SmartDatetimeInput } from "@/components/ui/extension/smart-datetime-input";
 import { createInterview } from "@/utils/api/interviews";
 import { BaseInterview } from "@/models/interview";
@@ -38,6 +46,9 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
         resolver: zodResolver(formSchema),
         mode: "onChange",
         defaultValues: {
+            jobTitle: "",
+            company: "",
+            jobDescription: "",
             salary: 90000,
             rating: 3,
             interviewDate: new Date(),
@@ -80,65 +91,120 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
     };
 
     return (
-        <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 w-full py-6">
-            <div className="space-y-2">
-                <Label htmlFor="company">Company</Label>
-                <Input id="company" {...form.register("company")} placeholder="e.g., Google" className={form.formState.errors.company ? "border-red-500" : ""}/>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="jobTitle">Job Title</Label>
-                <Input id="jobTitle" {...form.register("jobTitle")} placeholder="e.g., Frontend Developer" className={form.formState.errors.jobTitle ? "border-red-500" : ""}/>
-            </div>
-
-            <div className="space-y-2">
-                <Label htmlFor="jobDescription">Job Description</Label>
-                <Textarea
-                    id="jobDescription"
-                    {...form.register("jobDescription")}
-                    placeholder="Paste the complete job description here..."
-                    className={`min-h-[160px] ${form.formState.errors.jobDescription ? "border-red-500" : ""}`}
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 w-full py-6">
+                <FormField
+                    control={form.control}
+                    name="company"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Company</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., Google" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
 
-            <div className="space-y-2">
-                <Label>Expected Salary: {form.watch("salary")}</Label>
-                <Slider
-                    min={60000}
-                    max={200000}
-                    step={1000}
-                    defaultValue={[form.watch("salary") || 90000]}
-                    onValueChange={(vals) => form.setValue("salary", vals[0])}
+                <FormField
+                    control={form.control}
+                    name="jobTitle"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Job Title</FormLabel>
+                            <FormControl>
+                                <Input placeholder="e.g., Software Engineer" {...field} />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
 
-            <div className="space-y-2">
-                <Label>Interview Date & Time</Label>
-                <SmartDatetimeInput
-                    value={form.watch("interviewDate")}
-                    onValueChange={(val) => form.setValue("interviewDate", val)}
+                <FormField
+                    control={form.control}
+                    name="jobDescription"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Job Description</FormLabel>
+                            <FormControl>
+                                <Textarea
+                                    placeholder="Paste the complete job description here..."
+                                    className="min-h-[160px]"
+                                    {...field}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
                 />
-            </div>
 
-            <div className="space-y-2">
-                <Label>How much do you like this job?</Label>
-                <Rating value={form.watch("rating")} onChange={(event, val) => form.setValue("rating", val)}>
-                    <RatingButton />
-                    <RatingButton />
-                    <RatingButton />
-                    <RatingButton />
-                    <RatingButton />
-                </Rating>
-            </div>
+                <FormField
+                    control={form.control}
+                    name="salary"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Expected Salary: {form.watch("salary")}</FormLabel>
+                            <FormControl>
+                                <Slider
+                                    min={60000}
+                                    max={200000}
+                                    step={1000}
+                                    value={[field.value || 90000]}
+                                    onValueChange={(vals) => field.onChange(vals[0])}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
 
-            <div className="flex justify-end gap-3 pt-4">
-                <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
-                    Cancel
-                </Button>
-                <Button type="submit" disabled={!form.formState.isValid || isSaving}>
-                    {isSaving ? "Saving..." : "Create Interview"}
-                </Button>
-            </div>
-        </form>
+                <FormField
+                    control={form.control}
+                    name="interviewDate"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Interview Date & Time</FormLabel>
+                            <FormControl>
+                                <SmartDatetimeInput
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="rating"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>How much do you like this job?</FormLabel>
+                            <FormControl>
+                                <Rating value={field.value} onChange={(e, val) => field.onChange(val)}>
+                                    <RatingButton />
+                                    <RatingButton />
+                                    <RatingButton />
+                                    <RatingButton />
+                                    <RatingButton />
+                                </Rating>
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <div className="flex justify-end gap-3 pt-4">
+                    <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
+                        Cancel
+                    </Button>
+                    <Button type="submit" disabled={!form.formState.isValid || isSaving}>
+                        {isSaving ? "Saving..." : "Create Interview"}
+                    </Button>
+                </div>
+            </form>
+        </Form>
     );
 }
