@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
-import { Rating } from "@/components/ui/shadcn-io/rating";
+import {Rating, RatingButton} from "@/components/ui/rating-stars";
 import { SmartDatetimeInput } from "@/components/ui/extension/smart-datetime-input";
 import { createInterview } from "@/utils/api/interviews";
 import { BaseInterview } from "@/models/interview";
@@ -122,7 +122,13 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
 
             <div className="space-y-2">
                 <Label>How much do you like this job?</Label>
-                <Rating value={form.watch("rating")} onChange={(val) => form.setValue("rating", val)} />
+                <Rating value={form.watch("rating")} onChange={(event, val) => form.setValue("rating", val)}>
+                    <RatingButton />
+                    <RatingButton />
+                    <RatingButton />
+                    <RatingButton />
+                    <RatingButton />
+                </Rating>
             </div>
 
             <div className="flex justify-end gap-3 pt-4">

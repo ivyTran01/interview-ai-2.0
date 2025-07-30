@@ -48,7 +48,7 @@ export const RatingButton = ({
   index: providedIndex,
   size = 20,
   className,
-  icon = <StarIcon />,
+  icon = <StarIcon className="text-gray-300 dark:text-yellow-400" />
 }: RatingButtonProps) => {
   const {
     value,
@@ -111,7 +111,7 @@ export const RatingButton = ({
         size,
         className: cn(
           'transition-colors duration-200',
-          isActive && 'fill-current',
+          isActive ? 'stroke-yellow-400 fill-yellow-400' : 'stroke-gray-400 fill-transparent',
           !readOnly && 'cursor-pointer'
         ),
         'aria-hidden': 'true',
