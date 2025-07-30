@@ -1,8 +1,10 @@
 "use client"
 import {useState} from "react";
 import Link from "next/link";
-import {signInWithGoogle} from "@/lib/firebase/auth";
+import {signInWithGoogle, signOutUser} from "@/lib/firebase/auth";
 import {Button} from "@/components/ui/button";
+import {useAuth} from "@/context/AuthContext";
+import { LogOut } from "lucide-react";
 
 
 const Navbar = () => {
@@ -10,6 +12,9 @@ const Navbar = () => {
     const toggleNavbar = () => {
         setOpenNavbar(openNavbar => !openNavbar)
     }
+    const {user} = useAuth();
+    const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+
     return (
         <header className="fixed left-0 top-0 w-full flex items-center h-24 z-40">
             <nav className="relative mx-auto lg:max-w-7xl w-full px-5 sm:px-10 md:px-12 lg:px-5 flex gap-x-5 justify-between items-center">
@@ -40,21 +45,55 @@ const Navbar = () => {
                             <Link href="#" className="px-2 transition-colors  py-2.5 hover:text-purple-600 ">Resources</Link>
                         </li>
                     </ul>
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-4  lg:min-w-max mt-10 lg:mt-0">
-                        <Button
-                            onClick={async () => {
-                                try {
-                                    const user = await signInWithGoogle();
-                                    alert(`Welcome, ${user.displayName}`);
-                                } catch (err) {
-                                    alert("Login failed");
-                                }
-                            }}
-                        >
-                            Sign in
-                        </Button>
+
+                    {/*Sign-in button*/}
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4 lg:min-w-max mt-10 lg:mt-0 relative">
+                        {user ? (
+                            <div className="relative">
+                                <button
+                                    onClick={() => setUserDropdownOpen(prev => !prev)}
+                                    className="focus:outline-none"
+                                >
+                                    <img
+                                        src={user.photoURL || undefined}
+                                        alt={user.displayName || "User Profile"}
+                                        className="w-10 h-10 rounded-full border"
+                                        title={user.displayName || undefined}
+                                    />
+                                </button>
+
+                                {userDropdownOpen && (
+                                    <div className="absolute right-0 mt-2 w-40 bg-white dark:bg-gray-900 border rounded shadow-lg z-50">
+                                        <button
+                                            onClick={async () => {
+                                                await signOutUser();
+                                                setUserDropdownOpen(false);
+                                            }}
+                                            className="w-full px-4 py-2 text-left text-sm hover:bg-gray-100 dark:hover:bg-gray-800 flex items-center gap-2"
+                                        >
+                                            <LogOut size={18} />
+                                            Sign Out
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <Button
+                                onClick={async () => {
+                                    try {
+                                        const user = await signInWithGoogle();
+                                        console.log(`Welcome, ${user.displayName}`);
+                                    } catch (err) {
+                                        console.log("Login failed");
+                                    }
+                                }}
+                            >
+                                Sign in
+                            </Button>
+                        )}
                     </div>
                 </div>
+
                 <div className="flex items-center lg:hidden">
                     <button onClick={() => { toggleNavbar() }} aria-label="Toggle navbar" className="outline-none border-l border-l-gray-100 dark:border-l-gray-800 pl-3 relative py-3 children:flex">
                     <span aria-hidden="true" className={`
