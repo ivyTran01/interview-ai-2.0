@@ -17,9 +17,9 @@ import { createInterview } from "@/utils/api/interviews";
 import { BaseInterview } from "@/models/interview";
 
 const formSchema = z.object({
-    jobTitle: z.string().min(1),
-    company: z.string().min(1),
-    jobDescription: z.string().min(1),
+    jobTitle: z.string().min(1, "This field is required"),
+    company: z.string().min(1, "This field is required"),
+    jobDescription: z.string().min(1, "This field is required"),
     salary: z.number().min(0),
     interviewDate: z.date(),
     rating: z.number().min(1),
@@ -36,6 +36,7 @@ interface InterviewFormProps {
 export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps) {
     const form = useForm<FormData>({
         resolver: zodResolver(formSchema),
+        mode: "onChange",
         defaultValues: {
             salary: 90000,
             rating: 3,
@@ -82,12 +83,12 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
         <form onSubmit={form.handleSubmit(handleFormSubmit)} className="space-y-6 w-full py-6">
             <div className="space-y-2">
                 <Label htmlFor="company">Company</Label>
-                <Input id="company" {...form.register("company")} placeholder="e.g., Google" />
+                <Input id="company" {...form.register("company")} placeholder="e.g., Google" className={form.formState.errors.company ? "border-red-500" : ""}/>
             </div>
 
             <div className="space-y-2">
                 <Label htmlFor="jobTitle">Job Title</Label>
-                <Input id="jobTitle" {...form.register("jobTitle")} placeholder="e.g., Frontend Developer" />
+                <Input id="jobTitle" {...form.register("jobTitle")} placeholder="e.g., Frontend Developer" className={form.formState.errors.jobTitle ? "border-red-500" : ""}/>
             </div>
 
             <div className="space-y-2">
@@ -96,7 +97,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
                     id="jobDescription"
                     {...form.register("jobDescription")}
                     placeholder="Paste the complete job description here..."
-                    className="min-h-[160px]"
+                    className={`min-h-[160px] ${form.formState.errors.jobDescription ? "border-red-500" : ""}`}
                 />
             </div>
 
@@ -106,7 +107,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
                     min={60000}
                     max={200000}
                     step={1000}
-                    defaultValue={[form.watch("salary")]}
+                    defaultValue={[form.watch("salary") || 90000]}
                     onValueChange={(vals) => form.setValue("salary", vals[0])}
                 />
             </div>
@@ -128,7 +129,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
                 <Button type="button" variant="outline" onClick={onCancel} disabled={isSaving}>
                     Cancel
                 </Button>
-                <Button type="submit" disabled={isSaving}>
+                <Button type="submit" disabled={!form.formState.isValid || isSaving}>
                     {isSaving ? "Saving..." : "Create Interview"}
                 </Button>
             </div>
