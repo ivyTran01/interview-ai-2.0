@@ -313,36 +313,25 @@ const TimePicker = () => {
   React.useEffect(() => {
     const getCurrentElementTime = () => {
       const timeVal = Time.split(" ")[0];
-      debugger;
-      const hours = parseInt(timeVal.split(":")[0]);
+      let hours = parseInt(timeVal.split(":")[0]);
       const minutes = parseInt(timeVal.split(":")[1]);
-      const PM_AM = Time.split(" ")[1];
+      const isPM = Time.split(" ")[1] === "PM";   // handle NaturalLanguageInput (cuz it will pass in "6:15 PM", instead of "18:15")
 
-      const formatIndex =
-        PM_AM === "AM" ? hours : hours === 12 ? hours : hours + 12;
-      const formattedHours = formatIndex;
-
-      console.log(formatIndex);
-
-      for (let j = 0; j <= 3; j++) {
-        const diff = Math.abs(j * timestamp - minutes);
-        const selected =
-          PM_AM === (formattedHours >= 12 ? "PM" : "AM") &&
-          (minutes <= 53 ? diff < Math.ceil(timestamp / 2) : diff < timestamp);
-
-        if (selected) {
-          const trueIndex =
-            activeIndex === -1 ? formattedHours * 4 + j : activeIndex;
-
-          setActiveIndex(trueIndex);
-
-          const currentElm = document.getElementById(`time-${trueIndex}`);
-          currentElm?.scrollIntoView({
-            block: "center",
-            behavior: "smooth",
-          });
-        }
+      if (isPM && hours < 12) {
+        hours += 12;    // Convert to 24-hour format
       }
+      if (!isPM && hours === 12) {
+          hours = 0;      // Convert 12 AM to 0 hours
+      }
+
+      const indexToHighlight = hours * 4 + Math.floor(minutes / timestamp);
+      setActiveIndex(indexToHighlight);
+
+      const currentElm = document.getElementById(`time-${activeIndex}`);
+      currentElm?.scrollIntoView({
+        block: "center",
+        behavior: "smooth",
+      });
     };
 
     getCurrentElementTime();
@@ -484,7 +473,6 @@ const NaturalLanguageInput = React.forwardRef<
   const handleParse = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       // parse the date string when the input field loses focus
-      debugger;
       const parsedDateTime = parseDateTime(e.currentTarget.value);
       if (parsedDateTime) {
         // If a matcher function was passed, prevent selecting a disabled (past) date
@@ -586,7 +574,6 @@ const DateTimeLocalInput = ({
       e: React.MouseEvent,
     ) => {
       // if fully disabled, do nothing
-      debugger;
       if (typeof disabled === "boolean" && disabled) return;
       // if disabled is a matcher function and selected date should be disabled, do nothing
       if (typeof disabled === "function" && disabled(selectedDate)) return;
