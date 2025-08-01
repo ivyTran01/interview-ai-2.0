@@ -51,7 +51,12 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
             jobDescription: "",
             salary: 90000,
             rating: 3,
-            interviewDate: new Date(),
+            interviewDate: (() => {
+                const d = new Date();
+                d.setDate(d.getDate() + 1);  // tomorrow
+                d.setHours(10, 0, 0, 0);     // 10:00 AM
+                return d;
+            })(),
         },
     });
 
@@ -141,6 +146,24 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
 
                 <FormField
                     control={form.control}
+                    name="interviewDate"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Interview Date & Time</FormLabel>
+                            <FormControl>
+                                <SmartDatetimeInput
+                                    value={field.value}
+                                    onValueChange={field.onChange}
+                                    defaultTime="10:00 AM"
+                                />
+                            </FormControl>
+                            <FormMessage />
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
                     name="salary"
                     render={({ field }) => (
                         <FormItem>
@@ -152,23 +175,6 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
                                     step={1000}
                                     value={[field.value || 90000]}
                                     onValueChange={(vals) => field.onChange(vals[0])}
-                                />
-                            </FormControl>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-
-                <FormField
-                    control={form.control}
-                    name="interviewDate"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Interview Date & Time</FormLabel>
-                            <FormControl>
-                                <SmartDatetimeInput
-                                    value={field.value}
-                                    onValueChange={field.onChange}
                                 />
                             </FormControl>
                             <FormMessage />

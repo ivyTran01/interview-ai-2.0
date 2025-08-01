@@ -1,6 +1,13 @@
 "use client";
 
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import {
+    Sheet,
+    SheetContent,
+    SheetDescription,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button";
 import {InterviewForm} from "@/components/forms/InterviewForm";
 import {toast} from "sonner";
@@ -25,23 +32,27 @@ export default function DashboardPage() {
         <div className="min-h-screen p-6">
             <h1 className="text-3xl font-bold">Dashboard</h1>
 
-            <div className="mt-10">
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button>Add Interview</Button>
-                    </SheetTrigger>
+            <Sheet>
+                <SheetTrigger asChild>
+                    <Button>Add Interview</Button>
+                </SheetTrigger>
 
-                    <SheetContent side="right" className="w-full max-w-[90vw] lg:max-w-[60vw] p-22">
-                        <DialogTitle title="Add Interview" />
-                        <h2 className="text-lg font-semibold mb-4">Add New Interview</h2>
-                        <InterviewForm
-                            onSubmit={handleInterviewSubmit}
-                            onCancel={() => setIsInterviewDialogOpen(false)}
-                            userId={userId}
-                        />
-                    </SheetContent>
-                </Sheet>
-            </div>
+                <SheetContent side="right" className="w-full max-w-[90vw] lg:max-w-[60vw] p-20">
+                    <SheetHeader className="p-0 pt-4">
+                        <SheetTitle>Add new interview</SheetTitle>
+                        <SheetDescription>
+                            Congratulations on your new interview invitation! Practice makes perfect, and we're here to help you prepare.
+                        </SheetDescription>
+                    </SheetHeader>
+
+                    <InterviewForm
+                        onSubmit={handleInterviewSubmit}
+                        onCancel={() => setIsInterviewDialogOpen(false)}
+                        userId={userId}
+                    />
+                </SheetContent>
+            </Sheet>
+
         </div>
     );
 }

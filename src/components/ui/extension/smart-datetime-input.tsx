@@ -110,6 +110,7 @@ interface SmartDatetimeInputProps {
   value?: Date;
   onValueChange: (date: Date) => void;
   disabled?: boolean | ((date: Date) => boolean);
+  defaultTime?: string;
 }
 
 interface SmartDatetimeInputContextProps extends SmartDatetimeInputProps {
@@ -137,13 +138,13 @@ export const SmartDatetimeInput = React.forwardRef<
     "disabled" | "type" | "ref" | "value" | "defaultValue" | "onBlur"
   > &
     SmartDatetimeInputProps
->(({ className, value, onValueChange, placeholder, disabled }, ref) => {
+>(({ className, value, onValueChange, placeholder, disabled, defaultTime }, ref) => {
   // ? refactor to be only used with controlled input
   /*  const [dateTime, setDateTime] = React.useState<Date | undefined>(
     value ?? undefined
   ); */
 
-  const [Time, setTime] = React.useState<string>("");
+  const [Time, setTime] = React.useState<string>(defaultTime ?? "");
 
   const onTimeChange = React.useCallback((time: string) => {
     setTime(time);
@@ -312,6 +313,7 @@ const TimePicker = () => {
   React.useEffect(() => {
     const getCurrentElementTime = () => {
       const timeVal = Time.split(" ")[0];
+      debugger;
       const hours = parseInt(timeVal.split(":")[0]);
       const minutes = parseInt(timeVal.split(":")[1]);
       const PM_AM = Time.split(" ")[1];
@@ -344,7 +346,7 @@ const TimePicker = () => {
     };
 
     getCurrentElementTime();
-  }, [Time, activeIndex]);
+  }, [Time, activeIndex, value]);
 
   const height = React.useMemo(() => {
     if (!document) return;
@@ -358,6 +360,7 @@ const TimePicker = () => {
       <h3 className="text-sm font-medium ">Time</h3>
       <ScrollArea
         onKeyDown={handleKeydown}
+        onWheel={(e) => e.stopPropagation()}
         className="h-[90%] w-full focus-visible:outline-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:border-0 py-0.5"
         style={{
           height,
@@ -481,6 +484,7 @@ const NaturalLanguageInput = React.forwardRef<
   const handleParse = React.useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       // parse the date string when the input field loses focus
+      debugger;
       const parsedDateTime = parseDateTime(e.currentTarget.value);
       if (parsedDateTime) {
         // If a matcher function was passed, prevent selecting a disabled (past) date
@@ -574,7 +578,6 @@ const DateTimeLocalInput = ({
   ...props
 }: DateTimeLocalInputProps) => {
   const { value, onValueChange, Time } = useSmartDateInput();
-
   const formateSelectedDate = React.useCallback(
     (
       date: Date | undefined,
@@ -583,6 +586,7 @@ const DateTimeLocalInput = ({
       e: React.MouseEvent,
     ) => {
       // if fully disabled, do nothing
+      debugger;
       if (typeof disabled === "boolean" && disabled) return;
       // if disabled is a matcher function and selected date should be disabled, do nothing
       if (typeof disabled === "function" && disabled(selectedDate)) return;
@@ -619,14 +623,20 @@ const DateTimeLocalInput = ({
       <PopoverContent className="w-auto p-0" sideOffset={8}>
         <div className="flex gap-1">
           <Calendar
-            disabled={disabled}
-            {...props}
-            id={"calendar"}
-            className={cn("peer flex justify-end", inputBase, className)}
-            mode="single"
-            selected={value}
-            onSelect={formateSelectedDate}
-            initialFocus
+              disabled={(date) => {
+                const isBeforeToday = date < new Date(new Date().setHours(0, 0, 0, 0));
+                if (typeof disabled === "function") return isBeforeToday || disabled(date);
+                if (disabled === true) return true;
+                return isBeforeToday;
+              }}
+              {...props}
+              id={"calendar"}
+              className={cn("peer flex justify-end", inputBase, className)}
+              mode="single"
+              selected={value}
+              defaultMonth={value}
+              onSelect={formateSelectedDate}
+              initialFocus
           />
           <TimePicker />
         </div>
