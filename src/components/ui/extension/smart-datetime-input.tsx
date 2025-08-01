@@ -324,10 +324,10 @@ const TimePicker = () => {
           hours = 0;      // Convert 12 AM to 0 hours
       }
 
-      const indexToHighlight = hours * 4 + Math.floor(minutes / timestamp);
+      const indexToHighlight = hours * 4 + Math.round(minutes / timestamp);
       setActiveIndex(indexToHighlight);
 
-      const currentElm = document.getElementById(`time-${activeIndex}`);
+      const currentElm = document.getElementById(`time-${indexToHighlight}`);
       currentElm?.scrollIntoView({
         block: "center",
         behavior: "smooth",
