@@ -135,7 +135,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
                             <FormControl>
                                 <Textarea
                                     placeholder="Paste the complete job description here..."
-                                    className="min-h-[160px]"
+                                    className="min-h-[160px] h-[288px] overflow-auto resize-none scrollbar-hide"
                                     {...field}
                                 />
                             </FormControl>
