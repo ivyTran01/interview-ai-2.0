@@ -20,19 +20,18 @@ import {
 import React from "react";
 import { DataTablePagination } from "@/components/ui/data-table/pagination";
 import { DataTableViewOptions } from "@/components/ui/data-table/view-options-toggle";
-import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
-import {Button} from "@/components/ui/button";
-import {InterviewForm} from "@/components/forms/InterviewForm";
 
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
     data: TData[]
+    addNewEntryComponent?: React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
+                                             addNewEntryComponent
                                          }: DataTableProps<TData, TValue>) {
 
     const [rowSelection, setRowSelection] = React.useState({})
@@ -50,9 +49,20 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
-            <div>
-                <DataTableViewOptions table={table} />
+            {/* top table manipulation bar: add new entry, filter, sort, etc. */}
+            <div className="flex items-center justify-between py-4">
+                {/* left controls */}
+                <div>
+                    {/* todo: add search input and filter options here */}
+                </div>
+
+                {/* right controls */}
+                <div className="flex items-center space-x-2">
+                    <DataTableViewOptions table={table} />
+                    <div>{addNewEntryComponent}</div>
+                </div>
             </div>
+
             {/* table to display all interviews*/}
             <div className="overflow-hidden rounded-md border">
                 <Table>
@@ -99,7 +109,7 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
 
-            {/* extra table controls */}
+            {/* pagination controls */}
             <div className="py-4">
                 <DataTablePagination table={table} />
             </div>

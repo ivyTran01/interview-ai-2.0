@@ -47,35 +47,53 @@ export default function DashboardPage() {
         setIsInterviewDialogOpen(false);
     };
 
+    const handleInterviewCancel = () => {
+        //todo: add confirm cancel dialog
+        setIsInterviewDialogOpen(false);
+    }
+
     return (
         <div className="min-h-screen p-6">
             <div>
                 <h1 className="text-3xl font-bold">Dashboard</h1>
-
-                <Sheet>
-                    <SheetTrigger asChild>
-                        <Button>Add Interview</Button>
-                    </SheetTrigger>
-
-                    <SheetContent side="right" className="w-full max-w-[90vw] lg:max-w-[60vw] p-20">
-                        <SheetHeader className="p-0 pt-4">
-                            <SheetTitle>Add new interview</SheetTitle>
-                            <SheetDescription>
-                                Congratulations on your new interview invitation! Practice makes perfect, and we're here to help you prepare.
-                            </SheetDescription>
-                        </SheetHeader>
-
-                        <InterviewForm
-                            onSubmit={handleInterviewSubmit}
-                            onCancel={() => setIsInterviewDialogOpen(false)}
-                            userId={userId}
-                        />
-                    </SheetContent>
-                </Sheet>
             </div>
 
             <div className="container mx-auto py-10">
-                <DataTable columns={columns} data={dataForTable} />
+                <DataTable
+                    columns={columns}
+                    data={dataForTable}
+                    addNewEntryComponent={
+                        <>
+                            <Button onClick={() => setIsInterviewDialogOpen(true)}>Add Interview</Button>
+
+                            <Sheet
+                                open={isInterviewDialogOpen}
+                                onOpenChange={(open) => {
+                                    if (!open) {
+                                        // The user is trying to close it by clicking X or backdrop
+                                        console.log("User clicked X or backdrop to close the interview dialog");
+                                    }
+                                    setIsInterviewDialogOpen(open);
+                                }}
+                            >
+                                <SheetContent side="right" className="w-full max-w-[90vw] lg:max-w-[60vw] p-20">
+                                    <SheetHeader className="p-0 pt-4">
+                                        <SheetTitle>Add new interview</SheetTitle>
+                                        <SheetDescription>
+                                            Congratulations on your new interview invitation! Practice makes progress, so let's get you prepped up!
+                                        </SheetDescription>
+                                    </SheetHeader>
+
+                                    <InterviewForm
+                                        onSubmit={handleInterviewSubmit}
+                                        onCancel={handleInterviewCancel}
+                                        userId={userId}
+                                    />
+                                </SheetContent>
+                            </Sheet>
+                        </>
+                    }
+                />
             </div>
         </div>
     );
