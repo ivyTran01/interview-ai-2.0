@@ -25,12 +25,13 @@ import { createInterview } from "@/utils/api/interviews";
 import { BaseInterview } from "@/models/interview";
 
 const formSchema = z.object({
-    jobTitle: z.string().min(1, "This field is required"),
     company: z.string().min(1, "This field is required"),
+    jobTitle: z.string().min(1, "This field is required"),
     jobDescription: z.string().min(1, "This field is required"),
+    interviewDatetime: z.date(),
     salary: z.number().min(0),
-    interviewDate: z.date(),
-    rating: z.number().min(1),
+    likes: z.number().min(1),
+    status: z.enum(["success", "praying", "try harder"]),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -46,17 +47,18 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
         resolver: zodResolver(formSchema),
         mode: "onChange",
         defaultValues: {
-            jobTitle: "",
             company: "",
+            jobTitle: "",
             jobDescription: "",
-            salary: 90000,
-            rating: 3,
-            interviewDate: (() => {
+            interviewDatetime: (() => {
                 const d = new Date();
                 d.setDate(d.getDate() + 1);  // tomorrow
                 d.setHours(10, 0, 0, 0);     // 10:00 AM
                 return d;
             })(),
+            salary: 90000,
+            likes: 3,
+            status: "praying",
         },
     });
 
@@ -72,16 +74,19 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
 
         try {
             const interview_info: BaseInterview = {
+                company: data.company,
                 job_title: data.jobTitle,
                 job_description: data.jobDescription,
-                company: data.company,
-                created_at: {
-                    date: data.interviewDate,
-                    time: data.interviewDate.toLocaleTimeString([], {
+                interview_datetime: {
+                    date: data.interviewDatetime,
+                    time: data.interviewDatetime.toLocaleTimeString([], {
                         hour: "2-digit",
                         minute: "2-digit",
                     }),
                 },
+                salary: data.salary,
+                likes: data.likes,
+                status: data.status,
             };
 
             await createInterview(userId, interview_info);
@@ -146,7 +151,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
 
                 <FormField
                     control={form.control}
-                    name="interviewDate"
+                    name="interviewDatetime"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Interview Date & Time</FormLabel>
@@ -184,7 +189,7 @@ export function InterviewForm({ onSubmit, onCancel, userId }: InterviewFormProps
 
                 <FormField
                     control={form.control}
-                    name="rating"
+                    name="likes"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>How much do you like this job?</FormLabel>
