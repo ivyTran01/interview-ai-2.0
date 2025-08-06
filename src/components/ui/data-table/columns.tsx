@@ -40,18 +40,22 @@ export const columns: ColumnDef<Interview>[] = [
     },
     {
         accessorKey: "company",
+        meta: { label: "Company" },
         header: () => <div className="text-left">Company</div>,
     },
     {
         accessorKey: "job_title",
+        meta: { label: "Job title" },
         header: () => <div className="text-left">Job title</div>,
     },
     {
         accessorKey: "interview_datetime",
+        meta: { label: "Time"},
         header: "Time",
     },
     {
         accessorKey: "salary",
+        meta: { label: "Salary" },
         header: "Salary",
         cell: ({ row }) => {
             const amount = Number(row.getValue("salary"))
@@ -66,10 +70,12 @@ export const columns: ColumnDef<Interview>[] = [
     },
     {
         accessorKey: "likes",
+        meta: { label: "Love rating" },
         header: "Love rating",
     },
     {
         accessorKey: "status",
+        meta: { label: "Status" },
         header: "Status",
     },
     {

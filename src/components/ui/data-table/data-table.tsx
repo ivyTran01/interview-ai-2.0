@@ -18,7 +18,11 @@ import {
 } from "@/components/ui/table"
 
 import React from "react";
-import { DataTablePagination } from "@/components/ui/data-table/pagination"
+import { DataTablePagination } from "@/components/ui/data-table/pagination";
+import { DataTableViewOptions } from "@/components/ui/data-table/view-options-toggle";
+import {Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger} from "@/components/ui/sheet";
+import {Button} from "@/components/ui/button";
+import {InterviewForm} from "@/components/forms/InterviewForm";
 
 
 interface DataTableProps<TData, TValue> {
@@ -46,6 +50,9 @@ export function DataTable<TData, TValue>({
 
     return (
         <div>
+            <div>
+                <DataTableViewOptions table={table} />
+            </div>
             {/* table to display all interviews*/}
             <div className="overflow-hidden rounded-md border">
                 <Table>
