@@ -7,61 +7,45 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet"
+} from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import {InterviewForm} from "@/components/forms/InterviewForm";
-import {toast} from "sonner";
-import {useEffect, useState} from "react";
-import {useAuth} from "@/context/AuthContext";
-import { columns, InterviewRecord } from "@/components/ui/data-table/columns";
-import { DataTable } from "@/components/ui/data-table/data-table"
-
-async function getData(): Promise<InterviewRecord[]> {
-    // Fetch data from your API here.
-    return [
-        {
-            company: "Google",
-            job_title: "Software Engineer",
-            interview_datetime: {
-                date: new Date("2025-08-10T10:00:00"),
-                time: "10:00 AM",
-            },
-            salary: 130000,
-            likes: 5,
-            status: "praying",
-        },
-        {
-            company: "Amazon",
-            job_title: "Frontend Developer",
-            interview_datetime: {
-                date: new Date("2025-08-12T14:30:00"),
-                time: "2:30 PM",
-            },
-            salary: 120000,
-            likes: 4,
-            status: "try harder",
-        },
-    ]
-}
+import { InterviewForm } from "@/components/forms/InterviewForm";
+import { toast } from "sonner";
+import { useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
+import { columns } from "@/components/ui/data-table/columns";
+import { DataTable } from "@/components/ui/data-table/data-table";
+import { getAllInterviews } from "@/utils/api/interviews";
+import { Interview } from "@/models/interview";
 
 export default function DashboardPage() {
     const { user } = useAuth();
     const userId = user?.uid;
 
     const [isInterviewDialogOpen, setIsInterviewDialogOpen] = useState(false);
-    const [dataForTable, setDataForTable] = useState<InterviewRecord[]>([]);
+    const [dataForTable, setDataForTable] = useState<Interview[]>([]);
 
     useEffect(() => {
-        getData().then(setDataForTable);
-    }, []);
+        if (!userId) return;
+
+        const fetchData = async () => {
+            try {
+                const interviews = await getAllInterviews(userId);
+                setDataForTable(interviews);
+            } catch (error) {
+                console.error("Failed to fetch interviews", error);
+            }
+        };
+
+        fetchData();
+    }, [userId]);
 
     const handleInterviewSubmit = () => {
         toast("Interview session started", {
             description: "Good luck with your practice interview!",
         });
-        setIsInterviewDialogOpen(false); // Close the dialog
+        setIsInterviewDialogOpen(false);
     };
-
 
     return (
         <div className="min-h-screen p-6">

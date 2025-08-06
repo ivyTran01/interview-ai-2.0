@@ -13,3 +13,30 @@ export async function createInterview(
     return interviewDoc.id;
 }
 
+export async function getAllInterviews(userId: string): Promise<Interview[]> {
+    const interviewsCollection = collection(db, "users", userId, "interviews");
+    const interviewDocs = await getDocs(interviewsCollection);
+
+    return interviewDocs.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+    })) as Interview[];
+}
+
+export async function getInterviewById(
+    userId: string,
+    interviewId: string
+): Promise<Interview | null> {
+    const interviewDocRef = doc(db, "users", userId, "interviews", interviewId);
+    const interviewDoc = await getDoc(interviewDocRef);
+
+    if (interviewDoc.exists()) {
+        return {
+            id: interviewDoc.id,
+            ...interviewDoc.data(),
+        } as Interview;
+    } else {
+        return null;
+    }
+}
+

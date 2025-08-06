@@ -1,21 +1,19 @@
 "use client"
 
 import { ColumnDef } from "@tanstack/react-table"
+import { MoreHorizontal } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Interview } from "@/models/interview"
 
-
-export type InterviewRecord = {
-    company: string;
-    job_title: string;
-    interview_datetime: {
-        date: Date;
-        time: string;
-    };
-    salary: number;
-    likes: number;
-    status: "success" | "praying" | "try harder";
-}
-
-export const columns: ColumnDef<InterviewRecord>[] = [
+export const columns: ColumnDef<Interview>[] = [
     {
         accessorKey: "company",
         header: () => <div className="text-left">Company</div>,
