@@ -41,7 +41,7 @@ export default function DashboardPage() {
     }, [userId]);
 
     const handleInterviewSubmit = () => {
-        toast("Interview session started", {
+        toast("Interview session added", {
             description: "Good luck with your practice interview!",
         });
         setIsInterviewDialogOpen(false);

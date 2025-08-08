@@ -31,7 +31,7 @@ const formSchema = z.object({
     interviewDatetime: z.date(),
     salary: z.number().min(0),
     likes: z.number().min(1),
-    status: z.enum(["success", "praying", "try harder"]),
+    status: z.enum(["success", "praying", "try_harder"]),
 });
 
 type FormData = z.infer<typeof formSchema>;

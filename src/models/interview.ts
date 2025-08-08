@@ -8,7 +8,7 @@ export interface BaseInterview {
     };
     salary: number;
     likes: number;
-    status: "success" | "praying" | "try harder";
+    status: "success" | "praying" | "try_harder";
 }
 
 export interface Interview extends BaseInterview {

@@ -3,7 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
+import { StatusBadge } from "@/components/ui/status-badge";
 import { Checkbox } from "@/components/ui/checkbox"
 import {
     DropdownMenu,
@@ -14,6 +14,7 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Interview } from "@/models/interview"
+import {Rating, RatingButton} from "@/components/ui/rating-stars";
 
 export const columns: ColumnDef<Interview>[] = [
     {
@@ -52,6 +53,29 @@ export const columns: ColumnDef<Interview>[] = [
         accessorKey: "interview_datetime",
         meta: { label: "Time"},
         header: "Time",
+        cell: ({ row }) => {
+            const datetime = row.getValue("interview_datetime") as {
+                date: { seconds: number; nanoseconds: number };
+                time: string;
+            };
+
+            // convert Firebase timestamp to JS Date
+            const jsDate = new Date(datetime.date.seconds * 1000);
+
+            // format the date nicely
+            const formattedDate = jsDate.toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "numeric",
+            });
+
+            return (
+                <div>
+                    <div>{formattedDate}</div>
+                    <div>{datetime.time}</div>
+                </div>
+            );
+        },
     },
     {
         accessorKey: "salary",
@@ -59,11 +83,10 @@ export const columns: ColumnDef<Interview>[] = [
         header: "Salary",
         cell: ({ row }) => {
             const amount = Number(row.getValue("salary"))
-            const formatted = new Intl.NumberFormat("en-US", {
-                style: "currency",
-                currency: "CAD",
+            const formatted = "$" + amount.toLocaleString("en-US", {
+                minimumFractionDigits: 0,
                 maximumFractionDigits: 0,
-            }).format(amount)
+            })
 
             return <div className="font-medium">{formatted}</div>
         },
@@ -72,11 +95,27 @@ export const columns: ColumnDef<Interview>[] = [
         accessorKey: "likes",
         meta: { label: "Love rating" },
         header: "Love rating",
+        cell: ({ row }) => {
+            const num_stars = row.original.likes;
+            return (
+                <Rating defaultValue={num_stars} readOnly={true}>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                        <RatingButton key={index} size={18} />
+                    ))}
+                </Rating>
+            );
+        }
     },
     {
         accessorKey: "status",
         meta: { label: "Status" },
         header: "Status",
+        cell: ({ row }) => {
+            const status = row.getValue("status") as 'success' | 'praying' | 'try_harder';
+            return (
+                <StatusBadge status={status}/>
+            );
+        }
     },
     {
         id: "actions",
