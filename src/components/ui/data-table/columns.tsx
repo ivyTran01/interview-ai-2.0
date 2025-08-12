@@ -15,6 +15,8 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Interview } from "@/models/interview"
 import {Rating, RatingButton} from "@/components/ui/rating-stars";
+import router from "next/router";
+import Link from "next/link";
 
 export const columns: ColumnDef<Interview>[] = [
     {
@@ -131,12 +133,20 @@ export const columns: ColumnDef<Interview>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => navigator.clipboard.writeText(`practice: ${interview.id}`)}>
-                            Pratice
+                        <DropdownMenuItem asChild>
+                            <Link href={`/interview_session/`}>
+                                Practice
+                            </Link>
                         </DropdownMenuItem>
+
                         <DropdownMenuItem>Edit</DropdownMenuItem>
+
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Delete</DropdownMenuItem>
+
+                        <DropdownMenuItem className="text-red-500 text-md hover:bg-red-400/10">
+                            Delete
+                        </DropdownMenuItem>
+
                     </DropdownMenuContent>
                 </DropdownMenu>
             )
