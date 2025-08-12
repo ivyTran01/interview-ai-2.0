@@ -143,7 +143,7 @@ export const columns: ColumnDef<Interview>[] = [
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem className="text-red-500 text-md hover:bg-red-400/10">
+                        <DropdownMenuItem className="text-orange-600 font-medium hover:bg-red-400/20 focus:bg-red-400/20">
                             Delete
                         </DropdownMenuItem>
 
