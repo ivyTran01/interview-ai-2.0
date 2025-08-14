@@ -15,9 +15,43 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Interview } from "@/models/interview"
 import {Rating, RatingButton} from "@/components/ui/rating-stars";
-import router from "next/router";
-import Link from "next/link";
 import { getInterviewSessionId } from "@/utils/api/interview_sessions";
+import { useRouter } from "next/navigation";
+
+
+function ActionsCell({ userId, interview }: { userId: string; interview: Interview }) {
+    const router = useRouter();
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                    <span className="sr-only">Open menu</span>
+                    <MoreHorizontal className="h-4 w-4" />
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem
+                    onClick={async () => {
+                        const session_id = await getInterviewSessionId(userId, interview.id);
+                        router.push(`/interview_session/${session_id}`);
+                    }}
+                >
+                    Practice
+                </DropdownMenuItem>
+
+                <DropdownMenuItem>Edit</DropdownMenuItem>
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem className="text-orange-600 font-medium hover:bg-red-400/20 focus:bg-red-400/20 focus:text-orange-600">
+                    Delete
+                </DropdownMenuItem>
+            </DropdownMenuContent>
+        </DropdownMenu>
+    );
+}
+
 
 export const columns = (userId: string): ColumnDef<Interview>[] => [
     {
@@ -124,34 +158,7 @@ export const columns = (userId: string): ColumnDef<Interview>[] => [
         id: "actions",
         cell: ({ row }) => {
             const interview = row.original;
-            const interview_session_id = getInterviewSessionId(userId, interview.id);
-
-            return (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                            <span className="sr-only">Open menu</span>
-                            <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem asChild>
-                            <Link href={`/interview_session/${interview_session_id}`}>
-                                Practice
-                            </Link>
-                        </DropdownMenuItem>
-
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-
-                        <DropdownMenuSeparator />
-
-                        <DropdownMenuItem className="text-orange-600 font-medium hover:bg-red-400/20 focus:bg-red-400/20 focus:text-orange-600">
-                            Delete
-                        </DropdownMenuItem>
-
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+            return <ActionsCell userId={userId} interview={interview} />;
         },
     },
 ]
