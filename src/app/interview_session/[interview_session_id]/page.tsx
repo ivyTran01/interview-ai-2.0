@@ -60,6 +60,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+    Card,
+    CardHeader,
+    CardTitle,
+    CardContent,
+    CardFooter
+} from "@/components/ui/card";
 
 
 const messages: {
@@ -310,51 +317,65 @@ const Example = () => {
         }, 2000);
     };
     return (
-        <div className="relative flex size-full flex-col divide-y overflow-hidden">
-            <AIConversation>
-                <AIConversationContent>
-                    {messages.map(({ versions, ...message }, index) => (
-                        <AIBranch defaultBranch={0} key={index}>
-                            <AIBranchMessages>
-                                {versions.map((version) => (
-                                    <AIMessage from={message.from} key={version.id}>
-                                        <div>
-                                            {message.sources?.length && (
-                                                <AISources>
-                                                    <AISourcesTrigger count={message.sources.length} />
-                                                    <AISourcesContent>
-                                                        {message.sources.map((source) => (
-                                                            <AISource
-                                                                href={source.href}
-                                                                key={source.href}
-                                                                title={source.title}
-                                                            />
-                                                        ))}
-                                                    </AISourcesContent>
-                                                </AISources>
-                                            )}
-                                            <AIMessageContent>
-                                                <AIResponse>{version.content}</AIResponse>
-                                            </AIMessageContent>
-                                        </div>
-                                        <AIMessageAvatar name={message.name} src={message.avatar} />
-                                    </AIMessage>
-                                ))}
-                            </AIBranchMessages>
-                            {versions.length > 1 && (
-                                <AIBranchSelector from={message.from}>
-                                    <AIBranchPrevious />
-                                    <AIBranchPage />
-                                    <AIBranchNext />
-                                </AIBranchSelector>
-                            )}
-                        </AIBranch>
-                    ))}
-                </AIConversationContent>
-                <AIConversationScrollButton />
-            </AIConversation>
-            <div className="grid shrink-0 gap-4 pt-4">
-                <AISuggestions className="px-4">
+        <Card className="w-full max-w-5xl h-[90vh] mx-auto flex flex-col overflow-hidden">
+            {/* Header */}
+            <CardHeader className="border-b shrink-0">
+                {/*todo: add a back button to return to the interview list*/}
+                {/*todo: pass in the interview title here*/}
+                <CardTitle>Interview session</CardTitle>
+            </CardHeader>
+
+            {/* Scrollable Messages */}
+            <CardContent className="flex-1 overflow-y-auto p-0">
+                <div className="relative flex size-full flex-col divide-y">
+                    <AIConversation>
+                        <AIConversationContent>
+                            {messages.map(({ versions, ...message }, index) => (
+                                <AIBranch defaultBranch={0} key={index}>
+                                    <AIBranchMessages>
+                                        {versions.map((version) => (
+                                            <AIMessage from={message.from} key={version.id}>
+                                                <div>
+                                                    {message.sources?.length && (
+                                                        <AISources>
+                                                            <AISourcesTrigger count={message.sources.length} />
+                                                            <AISourcesContent>
+                                                                {message.sources.map((source) => (
+                                                                    <AISource
+                                                                        href={source.href}
+                                                                        key={source.href}
+                                                                        title={source.title}
+                                                                    />
+                                                                ))}
+                                                            </AISourcesContent>
+                                                        </AISources>
+                                                    )}
+                                                    <AIMessageContent>
+                                                        <AIResponse>{version.content}</AIResponse>
+                                                    </AIMessageContent>
+                                                </div>
+                                                <AIMessageAvatar name={message.name} src={message.avatar} />
+                                            </AIMessage>
+                                        ))}
+                                    </AIBranchMessages>
+                                    {versions.length > 1 && (
+                                        <AIBranchSelector from={message.from}>
+                                            <AIBranchPrevious />
+                                            <AIBranchPage />
+                                            <AIBranchNext />
+                                        </AIBranchSelector>
+                                    )}
+                                </AIBranch>
+                            ))}
+                        </AIConversationContent>
+                        <AIConversationScrollButton />
+                    </AIConversation>
+                </div>
+            </CardContent>
+
+            {/* Fixed Footer (Suggestions + Input) */}
+            <CardFooter className="flex flex-col gap-4 border-t shrink-0">
+                <AISuggestions className="px-2">
                     {suggestions.map((suggestion) => (
                         <AISuggestion
                             key={suggestion}
@@ -363,14 +384,16 @@ const Example = () => {
                         />
                     ))}
                 </AISuggestions>
-                <div className="w-full px-4 pb-4">
+
+                <div className="w-full px-2 pb-2">
                     <AIInput onSubmit={handleSubmit}>
                         <AIInputTextarea
                             onChange={(event) => setText(event.target.value)}
                             value={text}
                         />
-                        <AIInputToolbar>
+                        <AIInputToolbar className="px-2 pb-2">
                             <AIInputTools>
+                                {/* Attachments dropdown */}
                                 <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
                                         <AIInputButton>
@@ -379,32 +402,26 @@ const Example = () => {
                                         </AIInputButton>
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="start">
-                                        <DropdownMenuItem
-                                            onClick={() => handleFileAction('upload-file')}
-                                        >
+                                        <DropdownMenuItem onClick={() => handleFileAction('upload-file')}>
                                             <FileIcon className="mr-2" size={16} />
                                             Upload file
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => handleFileAction('upload-photo')}
-                                        >
+                                        <DropdownMenuItem onClick={() => handleFileAction('upload-photo')}>
                                             <ImageIcon className="mr-2" size={16} />
                                             Upload photo
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => handleFileAction('take-screenshot')}
-                                        >
+                                        <DropdownMenuItem onClick={() => handleFileAction('take-screenshot')}>
                                             <ScreenShareIcon className="mr-2" size={16} />
                                             Take screenshot
                                         </DropdownMenuItem>
-                                        <DropdownMenuItem
-                                            onClick={() => handleFileAction('take-photo')}
-                                        >
+                                        <DropdownMenuItem onClick={() => handleFileAction('take-photo')}>
                                             <CameraIcon className="mr-2" size={16} />
                                             Take photo
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>
+
+                                {/* Microphone button */}
                                 <AIInputButton
                                     onClick={() => setUseMicrophone(!useMicrophone)}
                                     variant={useMicrophone ? 'default' : 'ghost'}
@@ -412,6 +429,8 @@ const Example = () => {
                                     <MicIcon size={16} />
                                     <span className="sr-only">Microphone</span>
                                 </AIInputButton>
+
+                                {/* Search toggle */}
                                 <AIInputButton
                                     onClick={() => setUseWebSearch(!useWebSearch)}
                                     variant={useWebSearch ? 'default' : 'ghost'}
@@ -419,6 +438,8 @@ const Example = () => {
                                     <GlobeIcon size={16} />
                                     <span>Search</span>
                                 </AIInputButton>
+
+                                {/* Model selector */}
                                 <AIInputModelSelect onValueChange={setModel} value={model}>
                                     <AIInputModelSelectTrigger>
                                         <AIInputModelSelectValue />
@@ -440,12 +461,13 @@ const Example = () => {
                                     </AIInputModelSelectContent>
                                 </AIInputModelSelect>
                             </AIInputTools>
+
                             <AIInputSubmit disabled={!text} status={status} />
                         </AIInputToolbar>
                     </AIInput>
                 </div>
-            </div>
-        </div>
-    );
+            </CardFooter>
+        </Card>
+    )
 };
 export default Example;
