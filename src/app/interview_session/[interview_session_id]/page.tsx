@@ -26,11 +26,6 @@ import {
     AIInputTools,
 } from '@/components/ui/shadcn-io/ai/input';
 import { AIMessage, AIMessageAvatar, AIMessageContent } from '@/components/ui/shadcn-io/ai/message';
-// import {
-//     AIReasoning,
-//     AIReasoningContent,
-//     AIReasoningTrigger,
-// } from '@/components/ui/shadcn-io/ai/reasoning';
 import { AIResponse } from '@/components/ui/shadcn-io/ai/response';
 import {
     AISource,
@@ -65,6 +60,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+
+
 const messages: {
     from: 'user' | 'assistant';
     sources?: { href: string; title: string }[];
@@ -336,34 +333,6 @@ const Example = () => {
                                                     </AISourcesContent>
                                                 </AISources>
                                             )}
-                                            {message.tools?.map((toolCall) => (
-                                                <AITool key={toolCall.name}>
-                                                    <AIToolHeader
-                                                        description={toolCall.description}
-                                                        name={`Called MCP tool: ${toolCall.name}`}
-                                                        status={toolCall.status}
-                                                    />
-                                                    <AIToolContent>
-                                                        <AIToolParameters
-                                                            parameters={toolCall.parameters}
-                                                        />
-                                                        {(toolCall.result || toolCall.error) && (
-                                                            <AIToolResult
-                                                                error={toolCall.error}
-                                                                result={toolCall.result}
-                                                            />
-                                                        )}
-                                                    </AIToolContent>
-                                                </AITool>
-                                            ))}
-                                            {/*{message.reasoning && (*/}
-                                            {/*    <AIReasoning duration={message.reasoning.duration}>*/}
-                                            {/*        <AIReasoningTrigger />*/}
-                                            {/*        <AIReasoningContent>*/}
-                                            {/*            {message.reasoning.content}*/}
-                                            {/*        </AIReasoningContent>*/}
-                                            {/*    </AIReasoning>*/}
-                                            {/*)}*/}
                                             <AIMessageContent>
                                                 <AIResponse>{version.content}</AIResponse>
                                             </AIMessageContent>

@@ -17,8 +17,9 @@ import { Interview } from "@/models/interview"
 import {Rating, RatingButton} from "@/components/ui/rating-stars";
 import router from "next/router";
 import Link from "next/link";
+import { getInterviewSessionId } from "@/utils/api/interview_sessions";
 
-export const columns: ColumnDef<Interview>[] = [
+export const columns = (userId: string): ColumnDef<Interview>[] => [
     {
         id: "select",
         header: ({ table }) => (
@@ -122,7 +123,8 @@ export const columns: ColumnDef<Interview>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const interview = row.original
+            const interview = row.original;
+            const interview_session_id = getInterviewSessionId(userId, interview.id);
 
             return (
                 <DropdownMenu>
@@ -134,7 +136,7 @@ export const columns: ColumnDef<Interview>[] = [
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
                         <DropdownMenuItem asChild>
-                            <Link href={`/interview_session/`}>
+                            <Link href={`/interview_session/${interview_session_id}`}>
                                 Practice
                             </Link>
                         </DropdownMenuItem>
@@ -143,7 +145,7 @@ export const columns: ColumnDef<Interview>[] = [
 
                         <DropdownMenuSeparator />
 
-                        <DropdownMenuItem className="text-orange-600 font-medium hover:bg-red-400/20 focus:bg-red-400/20">
+                        <DropdownMenuItem className="text-orange-600 font-medium hover:bg-red-400/20 focus:bg-red-400/20 focus:text-orange-600">
                             Delete
                         </DropdownMenuItem>
 

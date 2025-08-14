@@ -60,7 +60,7 @@ export default function DashboardPage() {
 
             <div className="container mx-auto py-10">
                 <DataTable
-                    columns={columns}
+                    columns={columns(userId || "")}
                     data={dataForTable}
                     addNewEntryComponent={
                         <>
