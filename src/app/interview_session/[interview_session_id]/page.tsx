@@ -67,6 +67,9 @@ import {
     CardContent,
     CardFooter
 } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 
 const messages: {
@@ -276,6 +279,7 @@ const suggestions = [
     'Explain cloud computing basics',
 ];
 const Example = () => {
+    const router = useRouter();
     const [model, setModel] = useState<string>(models[0].id);
     const [text, setText] = useState<string>('');
     const [useWebSearch, setUseWebSearch] = useState<boolean>(false);
@@ -317,10 +321,17 @@ const Example = () => {
         }, 2000);
     };
     return (
-        <Card className="w-full max-w-5xl h-[90vh] mx-auto flex flex-col overflow-hidden">
+        <Card className="w-full max-w-[90vw] h-[90vh] mx-auto flex flex-col overflow-hidden">
             {/* Header */}
-            <CardHeader className="border-b shrink-0">
-                {/*todo: add a back button to return to the interview list*/}
+            <CardHeader className="border-b shrink-0 flex items-center justify-between">
+                <Button
+                    variant="ghost"
+                    className="h-8 w-8 p-0"
+                    onClick={() => router.back()}
+                >
+                    <ArrowLeft className="!w-5 !h-5"/>
+                </Button>
+
                 {/*todo: pass in the interview title here*/}
                 <CardTitle>Interview session</CardTitle>
             </CardHeader>
