@@ -33,7 +33,8 @@ export const AIMessageContent = ({
     className={cn(
       'flex flex-col gap-2 rounded-lg px-4 py-3 text-sm',
       'bg-muted text-foreground',
-      'group-[.is-user]:bg-primary group-[.is-user]:text-primary-foreground',
+      'group-[.is-user]:bg-gray-800 group-[.is-user]:text-white',
+      'group-[.is-assistant]:bg-transparent',
       className
     )}
     {...props}

@@ -102,7 +102,7 @@ const Example = () => {
 
     const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
         event.preventDefault();
-        if (!text) return;
+        if (!text || status != 'ready') return;
 
         // Add this new user message to the message list so we can render the message immediately:
         const newUserMessage = {
@@ -113,6 +113,7 @@ const Example = () => {
         };
         setChatMessages((prev) => [...prev, newUserMessage]);
         setStatus("submitted");
+        setText("");
 
         try {
             const res = await fetch("/api/ai_chat", {
@@ -147,8 +148,6 @@ const Example = () => {
             console.error(error);
             setStatus("error");
         }
-
-        setText("");
     };
 
     const handleFileAction = (action: string) => {
@@ -250,6 +249,7 @@ const Example = () => {
                         <AIInputTextarea
                             onChange={(event) => setText(event.target.value)}
                             value={text}
+                            className="m-1"
                         />
                         <AIInputToolbar className="px-2 pb-2">
                             <AIInputTools>
@@ -322,7 +322,7 @@ const Example = () => {
                                 </AIInputModelSelect>
                             </AIInputTools>
 
-                            <AIInputSubmit disabled={!text} status={status} />
+                            <AIInputSubmit disabled={!text || status != 'ready'} status={status} />
                         </AIInputToolbar>
                     </AIInput>
                 </div>
