@@ -104,12 +104,9 @@ export const AIInputTextarea = ({
   });
 
   const handleKeyDown: KeyboardEventHandler<HTMLTextAreaElement> = (e) => {
-    if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+    if (e.key === 'Enter' && !e.shiftKey && !e.altKey && !e.metaKey && !e.ctrlKey) {
       e.preventDefault();
-      const form = e.currentTarget.form;
-      if (form) {
-        form.requestSubmit();
-      }
+      e.currentTarget.form?.requestSubmit();
     }
   };
 
