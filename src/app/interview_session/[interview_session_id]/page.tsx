@@ -127,9 +127,9 @@ const Example = () => {
             setStatus("streaming");
 
             const data = await res.json();
-            if (data && data.output_text) {
-                const reply = data.output_text;
-                setSessionId(data.session_id);
+            if (data && data.res_content) {
+                const reply = data.res_content;
+                setSessionId(data.res_id);
 
                 const newAssistantMessage = {
                     from: "assistant" as const,

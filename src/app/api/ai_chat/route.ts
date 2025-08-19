@@ -10,18 +10,26 @@ export async function POST(req: Request) {
         const {input, prev_response_id, model} = await req.json();
         const response = await openai.responses.create(
             {
-                model: model || "gpt-5",
+                model: "gpt-5",
                 instructions: 'You are a helpful assistant.',
-                input: input,
+                input: [
+                    {
+                        role: 'user',
+                        content: input,
+                    }
+                ],
+                store: true,
                 previous_response_id: prev_response_id,
             }
         );
+        console.log(response);
         console.log('response text: ' + response.output_text);
-        console.log('response id: ' + response.previous_response_id);
+        console.log('response id: ' + response.id);
+        console.log('response id prev: ' + response.previous_response_id);
 
         return NextResponse.json({
-            output_text: response.output_text,
-            session_id: response.previous_response_id,
+            res_content: response.output_text,
+            res_id: response.id,
         });
     } catch (err) {
         console.error(err);
